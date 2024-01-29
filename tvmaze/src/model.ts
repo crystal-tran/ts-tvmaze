@@ -1,21 +1,7 @@
+import { IShows, IShowsReturns, IEpisodes } from "./interfaces";
+
 const MISSING_IMAGE_URL = "https://tinyurl.com/missing-tv";
 const TVMAZE_API_URL = "https://api.tvmaze.com/";
-
-interface IShowsReturns {
-  id: number,
-  name: string,
-  summary: string,
-  image: string
-}
-
-interface IShows {
-  show: {
-    id: number,
-    name: string,
-    summary: string,
-    image: { medium: string } | null;
-  };
-}
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -24,7 +10,7 @@ interface IShows {
  *    (if no image URL given by API, put in a default image URL)
  */
 
-async function searchShowsByTerm(term: string): Promise <IShowsReturns[]> {
+async function searchShowsByTerm(term: string): Promise<IShowsReturns[]> {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
   const showSearchParams = new URLSearchParams({ q: term });
   const response = await fetch(`${TVMAZE_API_URL}search/shows${showSearchParams}`);
@@ -36,8 +22,8 @@ async function searchShowsByTerm(term: string): Promise <IShowsReturns[]> {
       id: result.id,
       name: result.name,
       summary: result.summary,
-      //TODO: error here. Maybe do a ternary?
-      image: result.image.medium || MISSING_IMAGE_URL
+      image: result.image ? result.image.medium : MISSING_IMAGE_URL
+      // image: result.image.medium || MISSING_IMAGE_URL
     };
   });
 }
@@ -47,8 +33,18 @@ async function searchShowsByTerm(term: string): Promise <IShowsReturns[]> {
  *      { id, name, season, number }
  */
 
-async function getEpisodesOfShow(id) {
+async function getEpisodesOfShow(id: number): Promise<IEpisodes[]> {
+  const response = await fetch(`${TVMAZE_API_URL}/shows/${id}/episodes`);
+  const episodeData = await response.json();
+
+  return episodeData.map((e: IEpisodes) => ({
+    id: e.id,
+    name: e.name,
+    season: e.season,
+    number: e.number
+  }));
 }
+
 
 export {
   searchShowsByTerm,
