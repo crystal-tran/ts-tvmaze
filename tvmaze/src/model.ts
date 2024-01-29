@@ -35,9 +35,10 @@ async function searchShowsByTerm(term: string): Promise<IShowsReturns[]> {
  */
 
 async function getEpisodesOfShow(id: number): Promise<IEpisodes[]> {
-  const response = await fetch(`${TVMAZE_API_URL}/shows/${id}/episodes`);
+  // console.log("getEpisodesId=", id)
+  const response = await fetch(`${TVMAZE_API_URL}shows/${id}/episodes`);
   const episodeData = await response.json();
-
+  // console.log("episodeData=", episodeData)
   return episodeData.map((e: IEpisodes) => ({
     id: e.id,
     name: e.name,
