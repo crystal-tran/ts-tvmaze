@@ -5,6 +5,7 @@ import { IShows, IShowsReturns, IEpisodes } from "./interfaces.ts";
 const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
+const $episodeList = $("#episodeList");
 
 
 /** Given list of shows, create markup for each and to DOM */
@@ -42,7 +43,7 @@ function populateShows(shows: IShowsReturns[]) : void {
 
 async function searchForShowAndDisplay() {
   const term = $("#searchForm-term").val();
-  const shows = await searchShowsByTerm(term);
+  const shows = await searchShowsByTerm(term as string);
 
   $episodesArea.hide();
   populateShows(shows);
@@ -54,7 +55,28 @@ $searchForm.on("submit", async function (evt) {
 });
 
 
-/** Write a clear docstring for this function... */
+/** Given a list of episodes, create markup for each and add to DOM */
 
-function populateEpisodes(episodes) {
+function populateEpisodes(episodes: IEpisodes[]) : void {
+  $episodeList.empty();
+  for (let episode of episodes){
+    const $episode = $(
+      `<li>${episode.name} (season ${episode.season}, number ${episode.number})
+       </li>`
+    );
+    $episodeList.append($episode);
+  }
+
+  $episodesArea.show();
+}
+
+// $episodesArea.on("click", getAndDisplayEpisodes);
+
+/**Retrieves and displays list of episodes for a show, accepts a showId which is
+ * a number.
+ */
+
+async function getAndDisplayEpisodes(id: number){
+  const episodes = await getEpisodesOfShow(id);
+  populateEpisodes(episodes);
 }

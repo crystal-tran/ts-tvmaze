@@ -13,8 +13,9 @@ const TVMAZE_API_URL = "https://api.tvmaze.com/";
 async function searchShowsByTerm(term: string): Promise<IShowsReturns[]> {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
   const showSearchParams = new URLSearchParams({ q: term });
-  const response = await fetch(`${TVMAZE_API_URL}search/shows${showSearchParams}`);
+  const response = await fetch(`${TVMAZE_API_URL}search/shows?${showSearchParams}`);
   const apiShowData = await response.json();
+  console.log("apiShowData:", apiShowData);
 
   return apiShowData.map((s: IShows) => {
     const result = s.show;
