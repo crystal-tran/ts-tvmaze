@@ -36,7 +36,7 @@ async function searchShowsByTerm(term: string): Promise <IShowsReturns[]> {
       id: result.id,
       name: result.name,
       summary: result.summary,
-      //TODO: error here
+      //TODO: error here. Maybe do a ternary?
       image: result.image.medium || MISSING_IMAGE_URL
     };
   });
