@@ -13,7 +13,7 @@ interface IShows {
     id: number,
     name: string,
     summary: string,
-    image: { medium: string; };
+    image: { medium: string } | null;
   };
 }
 
@@ -36,7 +36,8 @@ async function searchShowsByTerm(term: string): Promise <IShowsReturns[]> {
       id: result.id,
       name: result.name,
       summary: result.summary,
-      image: result.image.medium as string || MISSING_IMAGE_URL;
+      //TODO: error here
+      image: result.image.medium || MISSING_IMAGE_URL
     };
   });
 }
@@ -48,7 +49,6 @@ async function searchShowsByTerm(term: string): Promise <IShowsReturns[]> {
 
 async function getEpisodesOfShow(id) {
 }
-
 
 export {
   searchShowsByTerm,
