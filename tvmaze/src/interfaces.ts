@@ -4,7 +4,7 @@ interface IShowsReturns {
   summary: string,
   image: string
 }
-
+//TODO: rename interface, have this one be IShowsAPI, and the other IShows
 interface IShows {
   show: {
     id: number,

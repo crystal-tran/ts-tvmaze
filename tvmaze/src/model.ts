@@ -1,3 +1,4 @@
+import { s } from "vitest/dist/reporters-1evA5lom.js";
 import { IShows, IShowsReturns, IEpisodes } from "./interfaces";
 
 const MISSING_IMAGE_URL = "https://tinyurl.com/missing-tv";
@@ -13,9 +14,9 @@ const TVMAZE_API_URL = "https://api.tvmaze.com/";
 async function searchShowsByTerm(term: string): Promise<IShowsReturns[]> {
   const showSearchParams = new URLSearchParams({ q: term });
   const response = await fetch(`${TVMAZE_API_URL}search/shows?${showSearchParams}`);
-  const apiShowData = await response.json();
+  const apiShowData : IShows[] = await response.json();
 
-  return apiShowData.map((s: IShows) => {
+  return apiShowData.map(s => {
     const result = s.show;
     return {
       id: result.id,
@@ -35,6 +36,8 @@ async function searchShowsByTerm(term: string): Promise<IShowsReturns[]> {
 async function getEpisodesOfShow(id: number): Promise<IEpisodes[]> {
   const response = await fetch(`${TVMAZE_API_URL}shows/${id}/episodes`);
   const episodeData = await response.json();
+  //TODO: can apply type to episodeData
+  //do some handle erroring for 404 errors
 
   return episodeData.map((e: IEpisodes) => ({
     id: e.id,
