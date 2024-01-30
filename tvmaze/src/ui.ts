@@ -1,11 +1,11 @@
 import $ from 'jquery';
 import { getEpisodesOfShow, searchShowsByTerm } from "./model.ts";
-import { IShows, IShowsReturns, IEpisodes } from "./interfaces.ts";
+import { IShowsReturns, IEpisodes } from "./interfaces.ts";
 
 const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
-const $episodeList = $("#episodeList");
+const $episodesList = $("#episodesList");
 
 
 /** Given list of shows, create markup for each and to DOM */
@@ -45,7 +45,7 @@ async function searchForShowAndDisplay() {
   const term = $("#searchForm-term").val();
   const shows = await searchShowsByTerm(term as string);
 
-  // $episodesArea.hide();
+  $episodesArea.hide();
   populateShows(shows);
 }
 
@@ -59,28 +59,28 @@ $searchForm.on("submit", async function (evt) {
 
 function populateEpisodes(episodes: IEpisodes[]): void {
   console.log("populateEpisodes=", episodes)
-  $episodeList.empty();
+  $episodesList.empty();
   for (let episode of episodes) {
-    // console.log("episode", episode)
     const $episode = $(
       `<li>${episode.name} (season ${episode.season}, number ${episode.number})
        </li>`
     );
-    console.log($episode)
-    $episodeList.append($episode);
+
+    $episodesList.append($episode);
   }
   $episodesArea.show();
 }
 
-// $episodesArea.on("click", getAndDisplayEpisodes);
+/**Retrieves and displays list of episodes for a show, accepts a showId which is
+ * a number.
+ */
 
 async function getAndDisplayEpisodes(showId : number): Promise<void> {
   const episodes = await getEpisodesOfShow(showId);
   populateEpisodes(episodes);
 }
 
-/**Retrieves and displays list of episodes for a show, accepts a showId which is
- * a number.
+/**Handles click to display list of episodes
  */
 
 $showsList.on(
@@ -90,5 +90,6 @@ $showsList.on(
     const showId = Number(
       $(evt.target).closest(".Show").data("show-id")
     );
+
     await getAndDisplayEpisodes(showId);
   });
